@@ -1,0 +1,92 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+Learning how to use `vcr`
+==========================
+
+Goals: using `vcr` in vignettes/ and tests/ of one or several packages,
+and contributing to `vcr` docs.
+
+Note: I'm using the webmockit branch.
+
+# What is an R port of a Ruby gem
+
+Not something depending on Ruby, it's more like a translation. Probably not surprising for a native speaker but _I_ tend to mix "port" and "wrapper".
+
+# Setting where cassettes are stored
+
+```{r}
+library("vcr")
+cassette_path() 
+
+fs::dir_delete(paste0(getwd(), "/vcr_cassettes"))
+fs::dir_create(paste0(getwd(), "/vcr_cassettes"))
+
+vcr_configure(
+  dir = paste0(getwd(), "/vcr_cassettes"),
+  record = "all"
+)
+
+cassette_path()
+```
+
+# What's in a cassette?
+
+A cassette can store the result of several calls at once?
+
+
+```{r}
+cli <- crul::HttpClient$new(url = "https://httpbin.org/get")
+vcr::use_cassette("helloworld", {
+    cli$get()
+  })
+```
+
+```{r}
+vcr::use_cassette("helloworld2", {
+  cli <- crul::HttpClient$new(url = "https://httpbin.org/get")
+    cli$get()
+  })
+
+```
+
+```{r}
+vcr::use_cassette("status", {
+  cli <- crul::HttpClient$new(url = "https://httpbin.org/get")
+    cli$get()
+    client <- crul::HttpClient$new(url = "https://api.openaq.org/status")
+  status <- client$get()
+  })
+
+```
+
+# Re-use a cassette
+
+```{r}
+mycassette <- cassettes()$helloworld2
+mycassette$request
+mycassette$response
+
+names(cassettes()$status)
+```
+
+One would need to re-use the cassette via `webmockr`, i.e. the thing that `vcr` has recorded is a list that one would feed into `webmockr::build_crul_response` or something like that.
+
+Not sure what would could do with a cassette from several interactions?
+
+# Saving and replaying all interactions between two things?
+
+This is a higher-level wish. 
+
+I wonder whether I could have all code of a vignette between two "things" (insert and eject?) and this would store all the interactions. Then if re-knitting the vignette say on CRAN it'd be as if the interactions had been memoised, the code would run without new http interactions? Not sure it'd be more useful than caching?
+
+How would one use `vcr` for testing a package?

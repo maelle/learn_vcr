@@ -1,0 +1,37 @@
+http_interactions:
+- request:
+    method: get
+    uri: https://httpbin.org/get
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      User-Agent: libcurl/7.56.1 r-curl/3.1 crul/0.5.2
+      Accept-Encoding: gzip, deflate
+      Accept: application/json, text/xml, application/xml, */*
+  response:
+    status:
+      status_code: '200'
+      message: OK
+      explanation: Request fulfilled, document follows
+    headers:
+      status: HTTP/1.1 200 OK
+      connection: keep-alive
+      server: meinheld/0.6.1
+      date: Wed, 28 Feb 2018 12:17:26 GMT
+      content-type: application/json
+      access-control-allow-origin: '*'
+      access-control-allow-credentials: 'true'
+      x-powered-by: Flask
+      x-processed-time: '0'
+      content-length: '328'
+      via: 1.1 vegur
+    body:
+      encoding: ''
+      string: "{\n  \"args\": {}, \n  \"headers\": {\n    \"Accept\": \"application/json,
+        text/xml, application/xml, */*\", \n    \"Accept-Encoding\": \"gzip, deflate\",
+        \n    \"Connection\": \"close\", \n    \"Host\": \"httpbin.org\", \n    \"User-Agent\":
+        \"libcurl/7.56.1 r-curl/3.1 crul/0.5.2\"\n  }, \n  \"origin\": \"176.145.232.211\",
+        \n  \"url\": \"https://httpbin.org/get\"\n}\n"
+  recorded_at: 2018-02-28 13:17:26
+  recorded_with: vcr/0.0.6.9420
